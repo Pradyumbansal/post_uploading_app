@@ -1,0 +1,73 @@
+<h1> posts </h1>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+<%= link_to 'Create new post', new_post_path %>
+
+ <div id = "form">
+  <% @post.each do |post| %>
+        <p>
+            <strong>Title:</strong>
+            <%= post.title %>
+        </p>
+        <p>
+            <%= image_tag post.image.url %>
+        </p>
+        <%= link_to 'Edit', edit_post_path(post) %> | 
+        <%= link_to 'Destroy', post_path(post),
+                method: :delete,
+                data: { confirm: 'Are you sure?' } %>
+  <% end %>
+  </div>
+ 
+
+
+
+<script>
+    FIX_OFF = <%= @POST_PER_PAGE %>
+    var offset = 0;
+    offset += FIX_OFF;
+
+    function tempfunc(){
+      console.log("hehee")
+        $.ajax({
+            type: "GET",
+            url: '<%= post_index_path %>'+'?offset='+offset,
+            success: function(data){
+                console.log("hhh")
+                post_form = ""
+                let start_idx = data.indexOf("<div id=\"form\">") + "<div id=\"form\">".length;
+                if(start_idx == -1)return;
+                data = data.substr(start_idx, data.length)
+                
+                let end_idx = data.indexOf("</div>")
+                data = data.substr(0, end_idx)
+
+                if(data.length < 10)return ;
+                
+                post_form = data;
+                var a= document.getElementById("form").innerHTML;
+                a = a + post_form;
+                document.getElementById("form").innerHTML = a;
+               
+                offset += FIX_OFF;
+            }
+        });
+    }
+
+    window.addEventListener("scroll", (event) => {
+      var el = document.getElementsByTagName("img");
+            for(i = 0; i < el.length; i++){
+                el[i].width = "500"
+                el[i].height = "500"
+              }
+             
+         if( $(window).scrollTop() + $(window).height() + 10 >= $(document).height()) {
+          
+            console.log("iff")
+              tempfunc();  
+        } 
+
+    });
+
+</script>

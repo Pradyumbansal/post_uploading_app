@@ -1,0 +1,10 @@
+<h1> show </h1>
+
+<p>
+<%= image_tag @post.image.url %>
+</p>
+<p>
+  <strong>Title:</strong>
+  <%= @post.title %>
+</p>
+<%= link_to 'All posts', post_index_path %>
